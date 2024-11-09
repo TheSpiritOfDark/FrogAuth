@@ -3,10 +3,20 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #define MaxLines 36
 #define MaxLineLength 64
 int LL = 0;
+
+void TrimPass(char *Lines){
+    //this removes spaces and tabs and whatnot that come after the actual text of the password
+
+    int Length = strlen(Lines);
+    while(Length > 0 && isspace((unsigned char)Lines[Length - 1])){
+        Lines[--Length] = '\0';
+    }
+}
 
 char** initfile(){
     //assign variables needed
@@ -31,6 +41,7 @@ char** initfile(){
             buffer[strcspn(buffer, "\n")] = '\0';
             Lines[LineCount] = malloc(strlen(buffer) + 1);
             if(buffer != NULL){
+                TrimPass(buffer);
                 strcpy(Lines[LineCount], buffer);
                 LL = LL + 1;
             }
