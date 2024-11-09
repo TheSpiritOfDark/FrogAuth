@@ -41,14 +41,15 @@ char** initfile(){
 
 char *GetNewPass(char **Lines){
     printf("2");
-    srand( (unsigned) time(NULL) * getpid());
-    int RandomNumber = rand() % MaxLines;
-    char *Pass = Lines[RandomNumber];
-    if(Pass != NULL){
-        return Pass;
+    char *Pass = NULL;
+    while(Pass == NULL){
+        srand( (unsigned) time(NULL) * getpid());
+        int RandomNumber = rand() % MaxLines;
+        Pass = Lines[RandomNumber];
+        if(Pass != NULL){
+            return Pass;
+        }
     }
-    printf("BAD");
-    return Lines[5]; //fix me
 }
 
 void rmpass(char **Lines, char *UsedPass){
