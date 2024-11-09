@@ -8,6 +8,7 @@
 #define MaxLines 36
 #define MaxLineLength 64
 int LL = 0;
+int passlim = 0;
 
 void TrimPass(char *Lines){
     //this removes spaces and tabs and whatnot that come after the actual text of the password
@@ -85,7 +86,7 @@ char **rmpass(char **Lines, char *UsedPass){
     }
 }
 
-int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
+int UserDoPassStuff(char CorPass[], char **Lines, int first){
     char inp[33];
 
     if(passlim >= 3){
@@ -107,7 +108,14 @@ int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
                 printf("Pass Incorrect!\n");
                 passlim = passlim + 1;
                 Lines = rmpass(Lines, CorPass);
-                UserDoPassStuff(GetNewPass(Lines), Lines, passlim);
+                if(first == 1){
+                    int result = 1;
+                    while(result == 1){
+                        result = UserDoPassStuff(GetNewPass(Lines), Lines, 0);
+                    }
+                } else{
+                    return 1;
+                }
             }
         }
         else { exit(1); }
@@ -122,7 +130,7 @@ int main(){
         return 1;
     }
 
-    UserDoPassStuff(GetNewPass(Lines), Lines, 0);
+    UserDoPassStuff(GetNewPass(Lines), Lines, 1);
 
     return 0;
 }
