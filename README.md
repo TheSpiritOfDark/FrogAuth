@@ -5,7 +5,7 @@ An authentication system made to be secure without relying on encription or othe
 
 There currently isnt a way to connect to the script from remotly, i'm probably going to make that soon (not sure if it'll be before or after i upload my project to high seas we'll see). 
 
-To use this script on linux, run `gcc password.c -o FrogAuth` in your terminal, make a file named `passlist.txt`, input your password list in passlist.txt (example provided in the repo), then run `./FrogAuth`. The script will give the first letter of the password it selected, then you can input the matching password. This is currently just a POC, though I do plan to make it more useful.
+To use this script on linux, run `gcc password.c -o FrogAuth` in your terminal, make a file named `passlist.txt`, input your password list in passlist.txt (example provided in the repo, max size is 64 characters and 36 passwords, though this is largely arbitrary), then run `./FrogAuth`. The script will give the first letter of the password it selected, then you can input the matching password. This is currently just a POC, though I do plan to make it more useful.
 
 # FAQ:
 

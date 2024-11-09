@@ -4,8 +4,9 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MaxLines 10
-#define MaxLineLength 32
+#define MaxLines 36
+#define MaxLineLength 64
+int LL = 0;
 
 char** initfile(){
     //assign variables needed
@@ -29,7 +30,10 @@ char** initfile(){
         if(fgets(buffer, MaxLineLength, File) != NULL){
             buffer[strcspn(buffer, "\n")] = '\0';
             Lines[LineCount] = malloc(strlen(buffer) + 1);
-            strcpy(Lines[LineCount], buffer);
+            if(buffer != NULL){
+                strcpy(Lines[LineCount], buffer);
+                LL = LL + 1;
+            }
             LineCount++;
         }
     }
@@ -43,7 +47,7 @@ char *GetNewPass(char **Lines){
     char *Pass = NULL;
     while(Pass == NULL){
         srand( (unsigned) time(NULL) * getpid());
-        int RandomNumber = rand() % MaxLines;
+        int RandomNumber = rand() % LL;
         Pass = Lines[RandomNumber];
         if(Pass != NULL){
             return Pass;
