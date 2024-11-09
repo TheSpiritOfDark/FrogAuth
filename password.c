@@ -43,7 +43,14 @@ char *GetNewPass(char **Lines){
     srand( (unsigned) time(NULL) * getpid());
     int RandomNumber = rand() % 10;
     char *Pass = Lines[RandomNumber];
-    return Pass;
+    if(Pass != NULL){
+        return Pass;
+    }
+    return Pass; //fix me
+}
+
+void rmpass(char **Lines, char *UsedPass){
+
 }
 
 int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
