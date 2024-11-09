@@ -40,13 +40,15 @@ char** initfile(){
 }
 
 char *GetNewPass(char **Lines){
+    printf("2");
     srand( (unsigned) time(NULL) * getpid());
-    int RandomNumber = rand() % 10;
+    int RandomNumber = rand() % MaxLines;
     char *Pass = Lines[RandomNumber];
     if(Pass != NULL){
         return Pass;
     }
-    return Pass; //fix me
+    printf("BAD");
+    return Lines[5]; //fix me
 }
 
 void rmpass(char **Lines, char *UsedPass){
@@ -88,6 +90,7 @@ int main(){
         printf("failed to read and/or allocate passwords");
         return 1;
     }
+    printf("1");
 
     UserDoPassStuff(GetNewPass(Lines), Lines, 0);
 
