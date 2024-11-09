@@ -1,23 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 #define MaxLines 10
 #define MaxLineLength 32
-int main(){
-    char Lines[] = initfile();
-    UserDoPassStuff(GetNewPass(Lines));
 
-    return 0;
-}
-
-char initfile(){
+char** initfile(){
+    //assign variables needed
     FILE *file = fopen("passlist.txt", "r");
     if (file == NULL){
-        return 1;
+        return NULL;
     }
-    char Lines[MaxLines];
+
+    char **Lines = malloc(MaxLines * sizeof(char*));
+    if(Lines == NULL){
+        fclose(file);
+        return NULL;
+    }
+
     int LineCount = 0;
+
+    //assing passwords to the Lines array
 
     while(LineCount < MaxLines && !feof(file)){
         char buffer[MaxLineLength];
@@ -33,20 +38,20 @@ char initfile(){
     return Lines;
 }
 
-char GetNewPass(char Lines[]){
+char *GetNewPass(char **Lines){
     srand( (unsigned) time(NULL) * getpid());
     int RandomNumber = rand() % 10;
-    char Pass[] = Lines[RandomNumber];
+    char *Pass = Lines[RandomNumber];
     return Pass;
 }
 
 int UserDoPassStuff(char CorPass[]){
     char inp[33];
-    int passlim;
+    int passlim = 0;
 
-    prinf("Your hint is %s. Enter password:", CorPass[0]);
+    printf("Your hint is %d. Enter password:", CorPass[0]);
 
-    while(0){
+    while(1){
         if(passlim >= 3){
             return 1;
         }
@@ -61,5 +66,19 @@ int UserDoPassStuff(char CorPass[]){
                 passlim = passlim + 1;
             }
         }
+        else { return 1; }
     }
+}
+
+int main(){
+    //get the password candidates from passlist.txt
+    char **Lines = initfile();
+    if(Lines == NULL){
+        printf("failed to read and/or allocate passwords");
+        return 1;
+    }
+
+    UserDoPassStuff(GetNewPass(Lines));
+
+    return 0;
 }
