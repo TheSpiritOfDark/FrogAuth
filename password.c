@@ -40,7 +40,6 @@ char** initfile(){
 }
 
 char *GetNewPass(char **Lines){
-    printf("2");
     char *Pass = NULL;
     while(Pass == NULL){
         srand( (unsigned) time(NULL) * getpid());
@@ -77,6 +76,7 @@ int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
     if(passlim >= 3){
         Passfail();
         Attempts = Attempts + 1;
+        passlim = 0;
     }
 
     printf("Your hint is %c. Enter password:", CorPass[0]);
@@ -87,7 +87,7 @@ int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
 
             if (strcmp(inp, CorPass) == 0){
                 printf("Pass Correct!\n");
-                return 0;
+                exit(0);
             } else {
                 printf("Pass Incorrect!\n");
                 passlim = passlim + 1;
@@ -106,10 +106,8 @@ int main(){
         printf("failed to read and/or allocate passwords");
         return 1;
     }
-    printf("1");
 
     UserDoPassStuff(GetNewPass(Lines), Lines, 0);
 
     return 0;
 }
-
