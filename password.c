@@ -9,14 +9,14 @@
 
 char** initfile(){
     //assign variables needed
-    FILE *file = fopen("passlist.txt", "r");
-    if (file == NULL){
+    FILE *File = fopen("passlist.txt", "r");
+    if (File == NULL){
         return NULL;
     }
 
     char **Lines = malloc(MaxLines * sizeof(char*));
     if(Lines == NULL){
-        fclose(file);
+        fclose(File);
         return NULL;
     }
 
@@ -24,9 +24,9 @@ char** initfile(){
 
     //assing passwords to the Lines array
 
-    while(LineCount < MaxLines && !feof(file)){
+    while(LineCount < MaxLines && !feof(File)){
         char buffer[MaxLineLength];
-        if(fgets(buffer, MaxLineLength, file) != NULL){
+        if(fgets(buffer, MaxLineLength, File) != NULL){
             buffer[strcspn(buffer, "\n")] = '\0';
             Lines[LineCount] = malloc(strlen(buffer) + 1);
             strcpy(Lines[LineCount], buffer);
@@ -34,7 +34,7 @@ char** initfile(){
         }
     }
     
-    fclose(file);
+    fclose(File);
 
     return Lines;
 }
@@ -52,14 +52,30 @@ char *GetNewPass(char **Lines){
     }
 }
 
-void rmpass(char **Lines, char *UsedPass){
+void Passfail(){
+    int FailTime[] = {15, 30, 60, 120, 240, 580, 1160, 9999, 9999999999}; //numbors
+    int Attempts; if(Attempts > 9){ Attempts = 9; }
 
+    printf("Please wait %d seconds to try again. \n", FailTime[Attempts]);
+    sleep(FailTime[Attempts]);
+}
+
+char **rmpass(char **Lines, char *UsedPass){
+    for(int i = 0; i< MaxLines; i++){
+        if(Lines[i] !=NULL && strcmp(Lines[i], UsedPass)){
+            free(Lines[i]);
+            Lines[i] = NULL;
+            return Lines;
+            break;
+        }
+    }
 }
 
 int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
     char inp[33];
 
     if(passlim >= 3){
+        PassFail();
         exit(1); //replace with lockout of somekind so we dont lock users other than the one that guessed incorectly out
     }
 
@@ -76,6 +92,7 @@ int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
                 printf("Pass Incorrect!\n");
                 printf("%s\n", CorPass); //debug
                 passlim = passlim + 1;
+                Lines = rmpass(Lines, CorPass);
 
                 UserDoPassStuff(GetNewPass(Lines), Lines, passlim);
             }
