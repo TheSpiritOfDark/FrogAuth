@@ -27,6 +27,7 @@ char** initfile(){
     while(LineCount < MaxLines && !feof(file)){
         char buffer[MaxLineLength];
         if(fgets(buffer, MaxLineLength, file) != NULL){
+            buffer[strcspn(buffer, "\n")] = '\0';
             Lines[LineCount] = malloc(strlen(buffer) + 1);
             strcpy(Lines[LineCount], buffer);
             LineCount++;
@@ -48,12 +49,13 @@ char *GetNewPass(char **Lines){
 int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
     char inp[33];
 
+    if(passlim >= 3){
+        exit(1); //replace with lockout of somekind so we dont lock users other than the one that guessed incorectly out
+    }
+
     printf("Your hint is %c. Enter password:", CorPass[0]);
 
     while(1){
-        if(passlim >= 3){
-            return 1;
-        }
         if(fgets(inp, sizeof(inp), stdin) != NULL){
             inp[strcspn(inp, "\n")] = '\0';
 
@@ -62,12 +64,13 @@ int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
                 return 0;
             } else {
                 printf("Pass Incorrect!\n");
+                printf("%s\n", CorPass); //debug
                 passlim = passlim + 1;
 
                 UserDoPassStuff(GetNewPass(Lines), Lines, passlim);
             }
         }
-        else { return 1; }
+        else { exit(1); }
     }
 }
 
@@ -83,3 +86,4 @@ int main(){
 
     return 0;
 }
+
