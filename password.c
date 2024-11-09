@@ -51,10 +51,10 @@ char *GetNewPass(char **Lines){
         }
     }
 }
-
+int Attempts = 0;
 void Passfail(){
-    int FailTime[] = {15, 30, 60, 120, 240, 580, 1160, 9999, 9999999999}; //numbors
-    int Attempts; if(Attempts > 9){ Attempts = 9; }
+    int FailTime[] = {60, 120, 240, 580, 1160, 9999, 15000, 150000}; //numbors
+    if(Attempts > 7){ Attempts = 7; }
 
     printf("Please wait %d seconds to try again. \n", FailTime[Attempts]);
     sleep(FailTime[Attempts]);
@@ -75,8 +75,8 @@ int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
     char inp[33];
 
     if(passlim >= 3){
-        PassFail();
-        exit(1); //replace with lockout of somekind so we dont lock users other than the one that guessed incorectly out
+        Passfail();
+        Attempts = Attempts + 1;
     }
 
     printf("Your hint is %c. Enter password:", CorPass[0]);
@@ -90,10 +90,8 @@ int UserDoPassStuff(char CorPass[], char **Lines, int passlim){
                 return 0;
             } else {
                 printf("Pass Incorrect!\n");
-                printf("%s\n", CorPass); //debug
                 passlim = passlim + 1;
                 Lines = rmpass(Lines, CorPass);
-
                 UserDoPassStuff(GetNewPass(Lines), Lines, passlim);
             }
         }
